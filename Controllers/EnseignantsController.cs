@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TP4.Data;
 
 namespace TP4.Controllers
 {
+    [Authorize]
     public class EnseignantsController : Controller
     {
         private readonly ApplicationDbContext _context;

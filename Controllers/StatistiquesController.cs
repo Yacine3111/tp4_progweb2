@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TP4.Data;
-using TP4.Models;
 using TP4.ViewModels;
 
 namespace TP4.Controllers
 {
+    [Authorize]
     public class StatistiquesController : Controller
     {
         private readonly ApplicationDbContext _context;

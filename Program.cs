@@ -1,6 +1,6 @@
-using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using TP4.Data;
 using TP4.Models;
 
@@ -13,6 +13,40 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.
+    AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAuthorization(options =>
+{
+    //options.AddPolicy("RequireAdminRole", policy => policy.RequireRole(Roles.Admin));
+    //options.AddPolicy("RequireStaffRole", policy => policy.RequireRole(Roles.Staff));
+    //options.AddPolicy("RequireTeacherRole", policy => policy.RequireRole(Roles.Teacher));
+    //options.AddPolicy("RequireStudentRole", policy => policy.RequireRole(Roles.Student));
+});
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+    options.Lockout.MaxFailedAccessAttempts = 3;
+
+    options.User.RequireUniqueEmail = true;
+
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+});
 
 CultureInfo ci = new CultureInfo("fr-CA");
 CultureInfo.DefaultThreadCurrentCulture = ci;
@@ -55,7 +89,7 @@ using (var scope = app.Services.CreateScope())
 
         await RolesInitializer.InitializeAsync(userManager, roleManager);
 
-        // Pour injecter les données à l'exécution
+        // Pour injecter les donnï¿½es ï¿½ l'exï¿½cution
         //SeedData.Initialize(context);
     }
     catch (Exception ex)

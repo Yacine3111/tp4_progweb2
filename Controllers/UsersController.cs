@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +8,7 @@ using TP4.ViewModels;
 
 namespace TP4.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
 
@@ -20,7 +21,7 @@ namespace TP4.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
-            
+
         }
 
         public async Task<ActionResult> Index()
@@ -38,7 +39,7 @@ namespace TP4.Controllers
                 };
                 vms.Add(userRolesViewModel);
             }
-            
+
             return View(vms);
         }
 
@@ -51,7 +52,7 @@ namespace TP4.Controllers
                 Enseignants = await _context.Enseignants.ToListAsync(),
                 Etudiants = await _context.Etudiants.ToListAsync()
             };
-            
+
             return View(vm);
         }
 
@@ -170,12 +171,12 @@ namespace TP4.Controllers
                 ModelState.AddModelError("SelectedRoles", "Doit avoir le rôle étudiant");
             }
 
-            if(vm.SelectedRoles.Contains(Roles.Student) && vm.EtudiantId == null)
+            if (vm.SelectedRoles.Contains(Roles.Student) && vm.EtudiantId == null)
             {
                 ModelState.AddModelError("EtudiantId", "Doit avoir un étudiant assigné");
             }
 
-            if(vm.EnseignantId != null && !vm.SelectedRoles.Contains(Roles.Teacher))
+            if (vm.EnseignantId != null && !vm.SelectedRoles.Contains(Roles.Teacher))
             {
                 ModelState.AddModelError("SelectedRoles", "Doit avoir le rôle enseignant");
             }
