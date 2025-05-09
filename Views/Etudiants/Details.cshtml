@@ -1,0 +1,89 @@
+﻿@model Etudiant
+@{
+    ViewData["Title"] = "Détails de l'étudiant";
+}
+
+<h1>Détails de l'étudiant</h1>
+
+<div>
+    <h4>@Model.NomComplet()</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NumeroEtudiant)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NumeroEtudiant)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Prenom)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Prenom)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Nom)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Nom)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.DateNaissance)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.DateNaissance)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Adresse)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Adresse)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Ville)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Ville)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CodePostal)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.CodePostal)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Telephone)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Telephone)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NumeroAssuranceSociale)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NumeroAssuranceSociale)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.InformationsMedicales)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.InformationsMedicales)</dd>
+    </dl>
+
+    <h4 class="mt-4">Cours inscrits</h4>
+    @if (Model.Inscriptions != null && Model.Inscriptions.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Titre</th>
+                    <th>Date d'inscription</th>
+                    <th>Statut</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inscription in Model.Inscriptions)
+                {
+                    <tr>
+                        <td>@inscription.Cours.Code</td>
+                        <td>@inscription.Cours.Titre</td>
+                        <td>@inscription.DateInscription.ToShortDateString()</td>
+                        <td>@inscription.Statut</td>
+                        <td>
+                            @if (inscription.NotePourcentage.HasValue)
+                            {
+                                @inscription.NotePourcentage.Value.ToString("F1")
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted">Aucune inscription</p>
+    }
+</div>
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+</div>

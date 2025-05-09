@@ -1,0 +1,58 @@
+﻿@model IEnumerable<UserRolesViewModel>
+
+@{
+    ViewData["Title"] = "Gestion des utilisateurs";
+}
+
+<h1>Gestion des utilisateurs</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Créer un nouvel utilisateur</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Date de création</th>
+            <th>Rôles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.User.Email</td>
+                <td>@item.User.Prenom</td>
+                <td>@item.User.Nom</td>
+                <td>@item.User.DateCreation.ToShortDateString()</td>
+                <td>
+                    @if (item.UserRoles.Any())
+                    {
+                        @string.Join(", ", item.UserRoles)
+                    }
+                    else
+                    {
+                        <span class="text-muted">Aucun rôle</span>
+                    }
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-action="Edit" asp-route-id="@item.User.Id" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <a asp-action="Delete" asp-route-id="@item.User.Id" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Aucun utilisateur trouvé.
+    </div>
+}

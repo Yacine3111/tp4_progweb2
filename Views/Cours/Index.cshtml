@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Cours>
+
+@{
+	ViewData["Title"] = "Cours";
+}
+
+<h1>Liste des cours</h1>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.Code)</th>
+			<th>@Html.DisplayNameFor(model => model.Titre)</th>
+			<th>@Html.DisplayNameFor(model => model.Credits)</th>
+			<th>@Html.DisplayNameFor(model => model.Enseignant)</th>
+			<th>@Html.DisplayNameFor(model => model.DateDebut)</th>
+			<th>@Html.DisplayNameFor(model => model.Local)</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.Code)</td>
+				<td>@Html.DisplayFor(modelItem => item.Titre)</td>
+				<td>@Html.DisplayFor(modelItem => item.Credits)</td>
+				<td>@Html.DisplayFor(modelItem => item.Enseignant.Prenom) @Html.DisplayFor(modelItem => item.Enseignant.Nom)</td>
+				<td>@Html.DisplayFor(modelItem => item.DateDebut)</td>
+				<td>@Html.DisplayFor(modelItem => item.Local)</td>
+				<td>
+					<div class="btn-group">
+						<a asp-action="ListeEtudiants" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Liste étudiants</a>
+						<a asp-action="SaisieParCours" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Saisir les notes</a>
+					</div>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

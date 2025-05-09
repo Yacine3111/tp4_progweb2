@@ -1,0 +1,99 @@
+﻿@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Modifier l'utilisateur";
+}
+
+<h1>Modifier l'utilisateur</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" readonly />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Prenom" class="control-label"></label>
+                <input asp-for="Prenom" class="form-control" />
+                <span asp-validation-for="Prenom" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nom" class="control-label"></label>
+                <input asp-for="Nom" class="form-control" />
+                <span asp-validation-for="Nom" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input asp-for="EmailConfirmed" class="form-check-input" />
+                    <label asp-for="EmailConfirmed" class="form-check-label"></label>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input asp-for="LockoutEnabled" class="form-check-input" />
+                    <label asp-for="LockoutEnabled" class="form-check-label"></label>
+                </div>
+            </div>
+
+            @if (Model.LockoutEnabled && Model.LockoutEnd.HasValue && Model.LockoutEnd.Value > DateTimeOffset.Now)
+            {
+                <div class="form-group mb-3">
+                    <div class="alert alert-warning">
+                        Cet utilisateur est actuellement verrouillé jusqu'au @Model.LockoutEnd.Value.LocalDateTime.ToString("g")
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" id="unlockUser" name="UnlockUser" class="form-check-input" />
+                        <label for="unlockUser" class="form-check-label">Déverrouiller l'utilisateur</label>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group mb-3">
+                <label class="control-label">Rôles</label>
+                <div class="checkbox-list">
+                    @foreach (var role in Model.AllRoles)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role" id="role_@role"
+                            @(Model.SelectedRoles.Contains(role) ? "checked" : "")>
+                            <label class="form-check-label" for="role_@role">
+                                @role
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Étudiant</label>
+                @Html.DropDownListFor(m => m.EtudiantId, Model.Etudiants.Select(e => new SelectListItem(e.NomComplet(), e.Id.ToString())), "Associez un étudiant", new { @class="form-select"})
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Enseignant</label>
+                @Html.DropDownListFor(m => m.EnseignantId, Model.Enseignants.Select(e => new SelectListItem(e.NomComplet(), e.Id.ToString())), "Associez un enseignant", new { @class = "form-select" })
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Retour à la liste</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

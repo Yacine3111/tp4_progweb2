@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Enseignant>
+
+@{
+    ViewData["Title"] = "Enseignants";
+}
+
+<h1>Liste des enseignants</h1>
+
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="form-group mb-3">
+        <div class="input-group">
+            <input type="text" name="searchString" class="form-control" placeholder="Rechercher par nom, prénom ou spécialité..." />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Prenom)</th>
+            <th>@Html.DisplayNameFor(model => model.Nom)</th>
+            <th>@Html.DisplayNameFor(model => model.Specialite)</th>
+            <th>@Html.DisplayNameFor(model => model.Bureau)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.DateEmbauche)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Prenom)</td>
+                <td>@Html.DisplayFor(modelItem => item.Nom)</td>
+                <td>@Html.DisplayFor(modelItem => item.Specialite)</td>
+                <td>@Html.DisplayFor(modelItem => item.Bureau)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateEmbauche)</td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-action="ListeCours" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Cours</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

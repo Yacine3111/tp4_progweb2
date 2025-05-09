@@ -1,0 +1,50 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TP4.Data;
+
+namespace TP4.Controllers
+{
+    public class EnseignantsController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public EnseignantsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index(string searchString)
+        {
+            var enseignants = _context.Enseignants.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                enseignants = enseignants.Where(s => s.Nom.Contains(searchString)
+                                       || s.Prenom.Contains(searchString)
+                                       || s.Specialite.Contains(searchString));
+            }
+
+            return View(await enseignants.ToListAsync());
+        }
+
+        public async Task<IActionResult> ListeCours(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var enseignant = await _context.Enseignants
+                .Include(e => e.Cours)
+                    .ThenInclude(c => c.Inscriptions)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (enseignant == null)
+            {
+                return NotFound();
+            }
+
+            return View(enseignant);
+        }
+    }
+}

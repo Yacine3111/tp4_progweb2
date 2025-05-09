@@ -1,0 +1,99 @@
+﻿@model StatistiquesViewModel
+
+@{
+    ViewData["Title"] = "Statistiques";
+}
+
+<h1>Statistiques de l'établissement</h1>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <h2 class="card-title">@Model.NombreEtudiants</h2>
+                <p class="card-text">Étudiants inscrits</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">
+                <h2 class="card-title">@Model.NombreCours</h2>
+                <p class="card-text">Cours offerts</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white mb-4">
+            <div class="card-body">
+                <h2 class="card-title">@Model.NombreEnseignants</h2>
+                <p class="card-text">Enseignants</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">
+                <h2 class="card-title">@Model.NombreInscriptions</h2>
+                <p class="card-text">Inscriptions</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Moyennes par cours</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Cours</th>
+                            <th>Moyenne</th>
+                            <th>Nombre d'étudiants</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cours in Model.MoyennesParCours)
+                        {
+                            <tr>
+                                <td>@cours.CoursTitre</td>
+                                <td>@cours.MoyenneNotes.ToString("F1")%</td>
+                                <td>@cours.NombreEtudiants</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Répartition des étudiants par ville</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Ville</th>
+                            <th>Nombre d'étudiants</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ville in Model.EtudiantsParVille)
+                        {
+                            <tr>
+                                <td>@ville.Key</td>
+                                <td>@ville.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

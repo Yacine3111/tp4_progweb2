@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Inscription>
+
+@{
+    ViewData["Title"] = "Inscriptions";
+}
+
+<h1>Liste des inscriptions</h1>
+
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="form-group mb-3">
+        <div class="input-group">
+            <input type="text" name="searchString" class="form-control" placeholder="Rechercher par nom, prénom, numéro, cours, ..." />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Étudiant</th>
+            <th>Cours</th>
+            <th>Date d'inscription</th>
+            <th>Statut</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Etudiant.NomEtNumero()</td>
+                <td>@item.Cours.Code - @item.Cours.Titre</td>
+                <td>@item.DateInscription.ToShortDateString()</td>
+                <td>@item.Statut</td>
+                <td>
+                    @if (item.NotePourcentage.HasValue)
+                    {
+                        @item.NotePourcentage.Value.ToString("F1")
+                    }
+                    else
+                    {
+                        <span class="text-muted">-</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

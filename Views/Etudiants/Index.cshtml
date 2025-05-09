@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@model IEnumerable<Etudiant>
+
+@{
+	ViewData["Title"] = "Étudiants";
+}
+
+<h1>Liste des étudiants</h1>
+
+<form asp-action="Index" method="get" class="mb-4">
+	<div class="form-group mb-3">
+		<div class="input-group">
+			<input type="text" name="searchString" class="form-control" placeholder="Rechercher par nom, prénom ou numéro..." />
+			<div class="input-group-append">
+				<button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+			</div>
+		</div>
+	</div>
+</form>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>@Html.DisplayNameFor(model => model.NumeroEtudiant)</th>
+			<th>@Html.DisplayNameFor(model => model.Prenom)</th>
+			<th>@Html.DisplayNameFor(model => model.Nom)</th>
+			<th>@Html.DisplayNameFor(model => model.DateNaissance)</th>
+			<th>@Html.DisplayNameFor(model => model.Ville)</th>
+			<th>@Html.DisplayNameFor(model => model.Email)</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.NumeroEtudiant)</td>
+				<td>@Html.DisplayFor(modelItem => item.Prenom)</td>
+				<td>@Html.DisplayFor(modelItem => item.Nom)</td>
+				<td>@Html.DisplayFor(modelItem => item.DateNaissance)</td>
+				<td>@Html.DisplayFor(modelItem => item.Ville)</td>
+				<td>@Html.DisplayFor(modelItem => item.Email)</td>
+				<td>
+					<div class="btn-group">
+						<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Détails</a>
+						<a asp-action="BulletinEtudiant" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Bulletin</a>
+					</div>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

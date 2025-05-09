@@ -1,0 +1,64 @@
+﻿@model Enseignant
+
+@{
+	ViewData["Title"] = "Cours enseignés";
+}
+
+<h1>Cours enseignés par @Model.NomComplet()</h1>
+
+<div class="row mb-3">
+	<div class="col">
+		<dl class="row">
+			<dt class="col-sm-3">Spécialité</dt>
+			<dd class="col-sm-9">@Model.Specialite</dd>
+
+			<dt class="col-sm-3">Bureau</dt>
+			<dd class="col-sm-9">@Model.Bureau</dd>
+
+			<dt class="col-sm-3">Email</dt>
+			<dd class="col-sm-9">@Model.Email</dd>
+		</dl>
+	</div>
+</div>
+
+@if (Model.Cours != null && Model.Cours.Any())
+{
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Code</th>
+				<th>Titre</th>
+				<th>Crédits</th>
+				<th>Local</th>
+				<th>Étudiants inscrits</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var cours in Model.Cours)
+			{
+				<tr>
+					<td>@cours.Code</td>
+					<td>@cours.Titre</td>
+					<td>@cours.Credits</td>
+					<td>@cours.Local</td>
+					<td>@cours.Inscriptions.Count / @cours.CapaciteMax</td>
+					<td>
+						<div class="btn-group">
+							<a asp-controller="Cours" asp-action="ListeEtudiants" asp-route-id="@cours.Id" class="btn btn-sm btn-outline-secondary">Liste étudiants</a>
+							<a asp-controller="Cours" asp-action="SaisieParCours" asp-route-id="@cours.Id" class="btn btn-sm btn-outline-primary">Saisir les notes</a>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+else
+{
+	<p class="text-muted">Cet enseignant n'enseigne aucun cours actuellement.</p>
+}
+
+<div class="mt-3">
+	<a asp-action="Index" class="btn btn-secondary">Retour à la liste des enseignants</a>
+</div>
