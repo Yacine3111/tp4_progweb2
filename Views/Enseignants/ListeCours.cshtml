@@ -45,8 +45,12 @@
 					<td>@cours.Inscriptions.Count / @cours.CapaciteMax</td>
 					<td>
 						<div class="btn-group">
-							<a asp-controller="Cours" asp-action="ListeEtudiants" asp-route-id="@cours.Id" class="btn btn-sm btn-outline-secondary">Liste étudiants</a>
-							<a asp-controller="Cours" asp-action="SaisieParCours" asp-route-id="@cours.Id" class="btn btn-sm btn-outline-primary">Saisir les notes</a>
+                            <a asp-controller="Cours" asp-action="ListeEtudiants" asp-route-id="@cours.Id" class="btn btn-sm btn-outline-secondary">Liste étudiants</a>
+							@if (!User.IsInRole(Roles.Staff))
+                            {
+                                <a asp-controller="Cours" asp-action="SaisieParCours" asp-route-id="@cours.Id" class="btn btn-sm btn-outline-primary">Saisir les notes</a>
+                            }
+
 						</div>
 					</td>
 				</tr>

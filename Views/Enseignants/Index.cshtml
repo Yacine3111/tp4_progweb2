@@ -6,16 +6,25 @@
 
 <h1>Liste des enseignants</h1>
 
-<form asp-action="Index" method="get" class="mb-4">
-    <div class="form-group mb-3">
-        <div class="input-group">
-            <input type="text" name="searchString" class="form-control" placeholder="Rechercher par nom, prénom ou spécialité..." />
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+@if (User.IsInRole(Roles.Teacher) && User.FindFirst(Claims.IsCoordo) == null)
+{
+}
+else
+{
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="form-group mb-3">
+            <div class="input-group">
+                <input type="text" name="searchString" class="form-control" placeholder="Rechercher par nom, prénom ou spécialité..." />
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-outline-secondary">Rechercher</button>
+                </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+}
+
+
+
 
 <table class="table table-striped">
     <thead>

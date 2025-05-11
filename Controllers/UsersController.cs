@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TP4.Data;
 using TP4.Models;
 using TP4.ViewModels;
 
 namespace TP4.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = Roles.Admin)]
     public class UsersController : Controller
     {
 
@@ -102,6 +103,28 @@ namespace TP4.Controllers
                     {
                         await _userManager.AddToRolesAsync(user, vm.SelectedRoles);
                     }
+
+                    if (user.EtudiantId != null)
+                    {
+                        var studentClaims = new List<Claim>
+                        {
+                            new Claim("StudentId", user.EtudiantId.ToString())
+                        };
+
+                        await RolesInitializer.AddClaims(_userManager, user, studentClaims.ToArray());
+                    }
+                    else
+                    {
+                        var teacherClaims = new List<Claim>
+                        {
+                            new Claim("TeacherId", user.EnseignantId.ToString())
+                        };
+
+                        await RolesInitializer.AddClaims(_userManager, user, teacherClaims.ToArray());
+
+                    }
+
+
 
                     return RedirectToAction(nameof(Index));
                 }

@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 using TP4.Models;
 
 namespace TP4.Data
@@ -8,7 +8,7 @@ namespace TP4.Data
     {
         public static async Task InitializeAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            if(userManager == null || roleManager == null)
+            if (userManager == null || roleManager == null)
             {
                 return;
             }
@@ -38,11 +38,33 @@ namespace TP4.Data
             var coordoUser = await CreateUser(userManager, "coordo@coordo.com", "Coordo", "Coordo123!", enseignantId: 2);
             await AddRole(userManager, coordoUser, Roles.Teacher);
 
+            var coordoClaims = new List<Claim>
+            {
+                new Claim(Claims.IsCoordo, "true")
+            };
+
+            await AddClaims(userManager, coordoUser, coordoClaims.ToArray());
+
+
             var teacherUser = await CreateUser(userManager, "teacher@teacher.com", "Enseignant", "Teacher123!", enseignantId: 1);
             await AddRole(userManager, teacherUser, Roles.Teacher);
 
+            var teacherClaims = new List<Claim>
+            {
+                new Claim(Claims.TeacherId, teacherUser.EnseignantId.ToString())
+            };
+
+            await AddClaims(userManager, teacherUser, teacherClaims.ToArray());
+
             var studentUser = await CreateUser(userManager, "student@student.com", "Étudiant", "Student123!", etudiantId: 1);
             await AddRole(userManager, studentUser, Roles.Student);
+
+            var studentClaims = new List<Claim>
+            {
+                new Claim(Claims.StudentId, studentUser.EtudiantId.ToString())
+            };
+
+            await AddClaims(userManager, studentUser, studentClaims.ToArray());
         }
 
         private static async Task<ApplicationUser> CreateUser(UserManager<ApplicationUser> userManager, string email, string firstName, string password, int? enseignantId = null, int? etudiantId = null)
@@ -77,7 +99,7 @@ namespace TP4.Data
             }
         }
 
-        private static async Task AddClaims(UserManager<ApplicationUser> userManager, ApplicationUser user, params Claim[] claims)
+        public static async Task AddClaims(UserManager<ApplicationUser> userManager, ApplicationUser user, params Claim[] claims)
         {
             var existingClaims = await userManager.GetClaimsAsync(user);
             foreach (var claim in claims)

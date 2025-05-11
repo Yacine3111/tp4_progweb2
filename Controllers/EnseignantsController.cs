@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TP4.Data;
+using TP4.Models;
 
 namespace TP4.Controllers
 {
@@ -14,16 +15,25 @@ namespace TP4.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = $"{Roles.Teacher},{Roles.Admin},{Roles.Staff}")]
         public async Task<IActionResult> Index(string searchString)
         {
             var enseignants = _context.Enseignants.AsQueryable();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (User.IsInRole(Roles.Teacher) && User.FindFirst(Claims.IsCoordo) == null)
             {
-                enseignants = enseignants.Where(s => s.Nom.Contains(searchString)
-                                       || s.Prenom.Contains(searchString)
-                                       || s.Specialite.Contains(searchString));
+                var userId = User.FindFirst(Claims.TeacherId).Value;
+                enseignants = enseignants.Where(e => e.Id.ToString() == userId);
+
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    enseignants = enseignants.Where(s => s.Nom.Contains(searchString)
+                                                         || s.Prenom.Contains(searchString)
+                                                         || s.Specialite.Contains(searchString));
+                }
             }
 
             return View(await enseignants.ToListAsync());
@@ -34,6 +44,16 @@ namespace TP4.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+
+            if (User.IsInRole(Roles.Teacher) && User.FindFirst(Claims.IsCoordo) == null)
+            {
+                var userId = User.FindFirst(Claims.TeacherId).Value;
+
+                if (userId != id.ToString())
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
             }
 
             var enseignant = await _context.Enseignants

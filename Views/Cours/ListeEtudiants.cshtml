@@ -64,7 +64,9 @@ else
 {
     <p class="text-muted">Aucun étudiant inscrit à ce cours.</p>
 }
-
-<div class="mt-3">
-    <a asp-controller="Cours" asp-action="SaisieParCours" asp-route-id="@Model.Id" class="btn btn-primary">Saisir les notes</a>
-</div>
+@if (!User.IsInRole(Roles.Staff))
+{
+    <div class="mt-3">
+        <a asp-controller="Cours" asp-action="SaisieParCours" asp-route-id="@Model.Id" class="btn btn-primary">Saisir les notes</a>
+    </div>
+}

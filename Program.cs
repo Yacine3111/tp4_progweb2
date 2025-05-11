@@ -21,10 +21,11 @@ builder.Services.
 
 builder.Services.AddAuthorization(options =>
 {
-    //options.AddPolicy("RequireAdminRole", policy => policy.RequireRole(Roles.Admin));
-    //options.AddPolicy("RequireStaffRole", policy => policy.RequireRole(Roles.Staff));
-    //options.AddPolicy("RequireTeacherRole", policy => policy.RequireRole(Roles.Teacher));
-    //options.AddPolicy("RequireStudentRole", policy => policy.RequireRole(Roles.Student));
+    options.AddPolicy("canSeeDetailsReportCard", policy =>
+    {
+        policy.RequireRole(Roles.Student, Roles.Admin, Roles.Staff);
+    });
+
 });
 
 builder.Services.Configure<IdentityOptions>(options =>

@@ -23,14 +23,37 @@ namespace TP4.Controllers
                 .Include(c => c.Enseignant)
                 .AsQueryable();
 
+            if (User.IsInRole(Roles.Student))
+            {
+                var userId = User.FindFirst(Claims.StudentId).Value;
+                cours = _context.Inscriptions.Where(i => i.EtudiantId.ToString() == userId)
+                     .Select(i => i.Cours);
+            }
+
+            if (User.IsInRole(Roles.Teacher) && User.FindFirst(Claims.IsCoordo) == null)
+            {
+                var userId = User.FindFirst(Claims.TeacherId).Value;
+                cours = cours.Where(c => c.EnseignantId.ToString() == userId);
+            }
+
             return View(await cours.ToListAsync());
         }
 
+        [Authorize(Roles = $"{Roles.Teacher},{Roles.Admin},{Roles.Staff}")]
         public async Task<IActionResult> ListeEtudiants(int? id)
         {
             if (id == null)
             {
                 return NotFound();
+            }
+
+            if (User.IsInRole(Roles.Teacher) && User.FindFirst(Claims.IsCoordo) == null)
+            {
+                var userId = User.FindFirst(Claims.TeacherId).Value;
+                if (userId != id.ToString())
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
             }
 
             var cours = await _context.Cours
@@ -46,12 +69,20 @@ namespace TP4.Controllers
 
             return View(cours);
         }
-
+        [Authorize(Roles = $"{Roles.Teacher},{Roles.Admin}")]
         public async Task<IActionResult> SaisieParCours(int? id)
         {
             if (id == null)
             {
                 return NotFound();
+            }
+            if (User.IsInRole(Roles.Teacher) && User.FindFirst(Claims.IsCoordo) == null)
+            {
+                var userId = User.FindFirst(Claims.TeacherId).Value;
+                if (userId != id.ToString())
+                {
+                    return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+                }
             }
 
             var cours = await _context.Cours

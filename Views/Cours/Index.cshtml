@@ -15,7 +15,10 @@
 			<th>@Html.DisplayNameFor(model => model.Enseignant)</th>
 			<th>@Html.DisplayNameFor(model => model.DateDebut)</th>
 			<th>@Html.DisplayNameFor(model => model.Local)</th>
-			<th>Actions</th>
+			@if (!User.IsInRole(Roles.Student))
+			{
+                <th>Actions</th>
+			}
 		</tr>
 	</thead>
 	<tbody>
@@ -28,12 +31,18 @@
 				<td>@Html.DisplayFor(modelItem => item.Enseignant.Prenom) @Html.DisplayFor(modelItem => item.Enseignant.Nom)</td>
 				<td>@Html.DisplayFor(modelItem => item.DateDebut)</td>
 				<td>@Html.DisplayFor(modelItem => item.Local)</td>
-				<td>
-					<div class="btn-group">
-						<a asp-action="ListeEtudiants" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Liste étudiants</a>
-						<a asp-action="SaisieParCours" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Saisir les notes</a>
-					</div>
-				</td>
+                <td>
+					@if (!User.IsInRole(Roles.Student))
+                    {
+                        <div class="btn-group">
+                            <a asp-action="ListeEtudiants" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Liste étudiants</a>
+							@if (!User.IsInRole(Roles.Staff))
+                            {
+                                <a asp-action="SaisieParCours" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Saisir les notes</a>
+                            }
+                        </div>
+                    }
+                </td>
 			</tr>
 		}
 	</tbody>
