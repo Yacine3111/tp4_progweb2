@@ -15,6 +15,7 @@ namespace TP4.Controllers
             _context = context;
         }
 
+        [Authorize(Policy = "canSeeRegistration")]
         public async Task<IActionResult> Index(string searchString)
         {
             var inscriptions = _context.Inscriptions

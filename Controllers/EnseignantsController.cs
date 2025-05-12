@@ -15,7 +15,7 @@ namespace TP4.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles = $"{Roles.Teacher},{Roles.Admin},{Roles.Staff}")]
+        [Authorize(Policy = "canSeeStudentListAndTeachers")]
         public async Task<IActionResult> Index(string searchString)
         {
             var enseignants = _context.Enseignants.AsQueryable();

@@ -39,7 +39,7 @@ namespace TP4.Controllers
             return View(await cours.ToListAsync());
         }
 
-        [Authorize(Roles = $"{Roles.Teacher},{Roles.Admin},{Roles.Staff}")]
+        [Authorize(Policy = "canSeeStudentListAndTeachers")]
         public async Task<IActionResult> ListeEtudiants(int? id)
         {
             if (id == null)
@@ -69,7 +69,7 @@ namespace TP4.Controllers
 
             return View(cours);
         }
-        [Authorize(Roles = $"{Roles.Teacher},{Roles.Admin}")]
+        [Authorize(Policy = "canEditGrades")]
         public async Task<IActionResult> SaisieParCours(int? id)
         {
             if (id == null)

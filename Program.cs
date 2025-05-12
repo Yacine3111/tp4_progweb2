@@ -26,6 +26,21 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole(Roles.Student, Roles.Admin, Roles.Staff);
     });
 
+    options.AddPolicy("canSeeStudentListAndTeachers", policy =>
+    {
+        policy.RequireRole(Roles.Teacher, Roles.Admin, Roles.Staff);
+    });
+
+    options.AddPolicy("canEditGrades", policy =>
+    {
+        policy.RequireRole(Roles.Teacher, Roles.Admin);
+    });
+
+
+    options.AddPolicy("canSeeRegistration", policy =>
+    {
+        policy.RequireRole(Roles.Staff, Roles.Admin);
+    });
 });
 
 builder.Services.Configure<IdentityOptions>(options =>
